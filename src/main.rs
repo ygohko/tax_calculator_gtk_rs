@@ -27,6 +27,15 @@ impl ApplicationWindowState {
             calculate_button: calculate_button.clone(),
         }
     }
+
+    fn calculate(&self) {
+        let price = self.price_entry.text();
+        let price: i32 = price.parse().unwrap();
+        let tax = ((price as f32) * 0.1f32) as i32;
+        let total = price + tax;
+        self.tax_entry.set_text(&tax.to_string());
+        self.total_entry.set_text(&total.to_string());
+    }
 }
 
 fn main() -> glib::ExitCode {
@@ -68,6 +77,14 @@ fn build_ui(app: &Application) {
         &total_entry,
         &calculate_button,
     )));
+    calculate_button.connect_clicked(clone!(
+        #[strong]
+        state,
+        move |_| {
+            let state1 = state.borrow();
+            state1.calculate();
+        }
+    ));
 
     let window = ApplicationWindow::builder()
         .application(app)
