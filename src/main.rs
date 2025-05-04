@@ -1,13 +1,12 @@
 use glib::clone;
-use gtk::prelude::*;
 use gtk::glib;
+use gtk::prelude::*;
 use gtk::Application;
 use gtk::ApplicationWindow;
 use gtk::Button;
 use gtk::Entry;
 use gtk::Grid;
 use gtk::Label;
-use gtk::Orientation;
 use std::cell::RefCell;
 use std::rc::Rc;
 
@@ -17,16 +16,14 @@ struct ApplicationWindowState {
     price_entry: Rc<Entry>,
     tax_entry: Rc<Entry>,
     total_entry: Rc<Entry>,
-    calculate_button: Rc<Button>,
 }
 
 impl ApplicationWindowState {
-    fn new(price_entry: &Rc<Entry>, tax_entry: &Rc<Entry>, total_entry: &Rc<Entry>, calculate_button: &Rc<Button>) -> Self {
+    fn new(price_entry: &Rc<Entry>, tax_entry: &Rc<Entry>, total_entry: &Rc<Entry>) -> Self {
         Self {
             price_entry: price_entry.clone(),
             tax_entry: tax_entry.clone(),
             total_entry: total_entry.clone(),
-            calculate_button: calculate_button.clone(),
         }
     }
 
@@ -56,45 +53,29 @@ fn build_ui(app: &Application) {
         .margin_end(12)
         .build();
     let calculate_button = Rc::new(button);
-    let entry = Entry::builder()
-        .build();
+    let entry = Entry::builder().hexpand(true).build();
     let price_entry = Rc::new(entry);
-    let entry = Entry::builder()
-        .build();
+    let entry = Entry::builder().build();
     let tax_entry = Rc::new(entry);
-    let entry = Entry::builder()
-        .build();
+    let entry = Entry::builder().build();
     let total_entry = Rc::new(entry);
 
-    let price_label = Label::builder()
-        .label("Price")
-        .build();
-    let tax_label = Label::builder()
-        .label("Tax")
-        .build();
-    let total_label = Label::builder()
-        .label("Total")
-        .build();
-    let grid = Grid::builder()
-        .build();
+    let price_label = Label::builder().label("Price").build();
+    let tax_label = Label::builder().label("Tax").build();
+    let total_label = Label::builder().label("Total").build();
+    let grid = Grid::builder().build();
     grid.attach(&price_label, 0, 0, 1, 1);
     grid.attach(price_entry.as_ref(), 1, 0, 1, 1);
     grid.attach(&tax_label, 0, 1, 1, 1);
     grid.attach(tax_entry.as_ref(), 1, 1, 1, 1);
     grid.attach(&total_label, 0, 2, 1, 1);
     grid.attach(total_entry.as_ref(), 1, 2, 1, 1);
-    
-    let box1 = gtk::Box::builder()
-        .orientation(Orientation::Vertical)
-        .build();
-    box1.append(&grid);
-    box1.append(calculate_button.as_ref());
+    grid.attach(calculate_button.as_ref(), 0, 3, 2, 1);
 
     let state = Rc::new(RefCell::new(ApplicationWindowState::new(
         &price_entry,
         &tax_entry,
         &total_entry,
-        &calculate_button,
     )));
     calculate_button.connect_clicked(clone!(
         #[strong]
@@ -108,7 +89,7 @@ fn build_ui(app: &Application) {
     let window = ApplicationWindow::builder()
         .application(app)
         .title("tax_calculator_gtk_rs")
-        .child(&box1)
+        .child(&grid)
         .build();
     window.present();
 }
