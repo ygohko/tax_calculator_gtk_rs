@@ -5,6 +5,8 @@ use gtk::Application;
 use gtk::ApplicationWindow;
 use gtk::Button;
 use gtk::Entry;
+use gtk::Grid;
+use gtk::Label;
 use gtk::Orientation;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -30,11 +32,12 @@ impl ApplicationWindowState {
 
     fn calculate(&self) {
         let price = self.price_entry.text();
-        let price: i32 = price.parse().unwrap();
-        let tax = ((price as f32) * 0.1f32) as i32;
-        let total = price + tax;
-        self.tax_entry.set_text(&tax.to_string());
-        self.total_entry.set_text(&total.to_string());
+        if let Ok(price) = price.parse::<i32>() {
+            let tax = ((price as f32) * 0.1f32) as i32;
+            let total = price + tax;
+            self.tax_entry.set_text(&tax.to_string());
+            self.total_entry.set_text(&total.to_string());
+        }
     }
 }
 
@@ -63,12 +66,28 @@ fn build_ui(app: &Application) {
         .build();
     let total_entry = Rc::new(entry);
 
+    let price_label = Label::builder()
+        .label("Price")
+        .build();
+    let tax_label = Label::builder()
+        .label("Tax")
+        .build();
+    let total_label = Label::builder()
+        .label("Total")
+        .build();
+    let grid = Grid::builder()
+        .build();
+    grid.attach(&price_label, 0, 0, 1, 1);
+    grid.attach(price_entry.as_ref(), 1, 0, 1, 1);
+    grid.attach(&tax_label, 0, 1, 1, 1);
+    grid.attach(tax_entry.as_ref(), 1, 1, 1, 1);
+    grid.attach(&total_label, 0, 2, 1, 1);
+    grid.attach(total_entry.as_ref(), 1, 2, 1, 1);
+    
     let box1 = gtk::Box::builder()
         .orientation(Orientation::Vertical)
         .build();
-    box1.append(price_entry.as_ref());
-    box1.append(tax_entry.as_ref());
-    box1.append(total_entry.as_ref());
+    box1.append(&grid);
     box1.append(calculate_button.as_ref());
 
     let state = Rc::new(RefCell::new(ApplicationWindowState::new(
