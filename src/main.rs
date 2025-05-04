@@ -109,7 +109,7 @@ fn build_ui(app: &Application) {
         .build();
     let total_entry = Rc::new(entry);
     let button = Button::builder()
-        .label("Calcluate")
+        .label("Calculate")
         .margin_top(12)
         .margin_bottom(12)
         .margin_start(12)
