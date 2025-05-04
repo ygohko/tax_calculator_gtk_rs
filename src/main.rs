@@ -1,11 +1,13 @@
 use glib::clone;
 use gtk::glib;
 use gtk::prelude::*;
+use gtk::Align;
 use gtk::Application;
 use gtk::ApplicationWindow;
 use gtk::Button;
 use gtk::Entry;
 use gtk::Grid;
+use gtk::InputPurpose;
 use gtk::Label;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -45,6 +47,42 @@ fn main() -> glib::ExitCode {
 }
 
 fn build_ui(app: &Application) {
+    let price_label = Label::builder().label("Price")
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+    let tax_label = Label::builder().label("Tax")
+        .margin_start(12)
+        .margin_end(12)
+        .halign(Align::Start)
+        .build();
+    let total_label = Label::builder().label("Total")
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+    let entry = Entry::builder()
+        .margin_top(12)
+        .margin_end(12)
+        .input_purpose(InputPurpose::Digits)
+        .xalign(1.0f32)
+        .hexpand(true)
+        .build();
+    let price_entry = Rc::new(entry);
+    let entry = Entry::builder()
+        .margin_top(12)
+        .margin_end(12)
+        .editable(false)
+        .xalign(1.0f32)
+        .build();
+    let tax_entry = Rc::new(entry);
+    let entry = Entry::builder()
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_end(12)
+        .editable(false)
+        .xalign(1.0f32)
+        .build();
+    let total_entry = Rc::new(entry);
     let button = Button::builder()
         .label("Calcluate")
         .margin_top(12)
@@ -53,16 +91,7 @@ fn build_ui(app: &Application) {
         .margin_end(12)
         .build();
     let calculate_button = Rc::new(button);
-    let entry = Entry::builder().hexpand(true).build();
-    let price_entry = Rc::new(entry);
-    let entry = Entry::builder().build();
-    let tax_entry = Rc::new(entry);
-    let entry = Entry::builder().build();
-    let total_entry = Rc::new(entry);
 
-    let price_label = Label::builder().label("Price").build();
-    let tax_label = Label::builder().label("Tax").build();
-    let total_label = Label::builder().label("Total").build();
     let grid = Grid::builder().build();
     grid.attach(&price_label, 0, 0, 1, 1);
     grid.attach(price_entry.as_ref(), 1, 0, 1, 1);
