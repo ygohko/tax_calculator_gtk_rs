@@ -71,43 +71,51 @@ fn main() -> glib::ExitCode {
 fn build_ui(app: &Application) {
     let price_label = Label::builder()
         .label("Price")
+        .margin_top(12)
+        .margin_bottom(6)
         .margin_start(12)
         .margin_end(12)
         .build();
     let tax_label = Label::builder()
         .label("Tax")
+        .margin_top(6)
+        .margin_bottom(6)
         .margin_start(12)
         .margin_end(12)
         .halign(Align::Start)
         .build();
     let total_label = Label::builder()
         .label("Total")
+        .margin_top(6)
+        .margin_bottom(6)
         .margin_start(12)
         .margin_end(12)
         .build();
-    let entry = Entry::builder()
+    let price_entry = Entry::builder()
         .margin_top(12)
+        .margin_bottom(6)
         .margin_end(12)
         .input_purpose(InputPurpose::Digits)
         .xalign(1.0f32)
         .hexpand(true)
         .build();
-    let price_entry = Rc::new(entry);
-    let entry = Entry::builder()
-        .margin_top(12)
+    let price_entry = Rc::new(price_entry);
+    let tax_entry = Entry::builder()
+        .margin_top(6)
+        .margin_bottom(6)
         .margin_end(12)
         .editable(false)
         .xalign(1.0f32)
         .build();
-    let tax_entry = Rc::new(entry);
-    let entry = Entry::builder()
-        .margin_top(12)
-        .margin_bottom(12)
+    let tax_entry = Rc::new(tax_entry);
+    let total_entry = Entry::builder()
+        .margin_top(6)
+        .margin_bottom(6)
         .margin_end(12)
         .editable(false)
         .xalign(1.0f32)
         .build();
-    let total_entry = Rc::new(entry);
+    let total_entry = Rc::new(total_entry);
     let button = Button::builder()
         .label("Calculate")
         .margin_top(12)
